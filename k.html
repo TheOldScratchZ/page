@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Tài Liệu - Kho Tài Liệu THPT FPT</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 14%;
+            background: white;
+            border-right: 1px solid #e1e5e9;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .school-header {
+            padding: 20px;
+            border-bottom: 1px solid #e1e5e9;
+            text-align: center;
+        }
+
+        .school-logo {
+            width: 40px;
+            height: 40px;
+            background: #495057;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            color: white;
+            font-weight: 600;
+        }
+
+        .school-name {
+            font-size: 1em;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 4px;
+        }
+
+        .school-subtitle {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+
+        .nav-main-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            color: #495057;
+            text-decoration: none;
+            font-weight: 500;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .dropdown-menu {
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #f1f3f5;
+            padding-left: 40px;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-item.active {
+            background: #e9ecef;
+            font-weight: 500;
+            border-left: 3px solid #495057;
+        }
+
+        .main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .breadcrumb-container {
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .breadcrumb {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        .breadcrumb a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            color: #212529;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #cbd5e0;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .form-container {
+            flex: 1;
+            max-width: calc(100% - 30%);
+            background: white;
+            border: 1px solid #e1e5e9;
+            height: fit-content;
+        }
+
+        .form-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            background: #f8f9fa;
+        }
+
+        .form-header h2 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .form-body {
+            padding: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #212529;
+            font-size: 0.9em;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            font-size: 0.9em;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #495057;
+        }
+
+        /* Search Dropdown Styles */
+        .search-dropdown {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 36px 10px 12px;
+            border: 1px solid #ced4da;
+            font-size: 0.9em;
+            transition: border-color 0.2s ease;
+            background: white;
+            cursor: pointer;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #495057;
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 0.8em;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+        }
+
+        .search-dropdown.open .dropdown-arrow {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ced4da;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-dropdown.open .dropdown-list {
+            display: block;
+        }
+
+        .dropdown-option {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-option:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-option.selected {
+            background: #e9ecef;
+            font-weight: 500;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+            font-family: inherit;
+        }
+
+        .upload-zone {
+            border: 2px dashed #ced4da;
+            padding: 24px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            border-color: #495057;
+            background: #e9ecef;
+        }
+
+        .upload-icon {
+            font-size: 2em;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+
+        .upload-zone:hover .upload-icon {
+            color: #495057;
+        }
+
+        .upload-text {
+            font-size: 0.95em;
+            color: #495057;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .upload-subtext {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #495057;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #343a40;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .queue-container {
+            width: 400px;
+            min-width: 400px;
+            background: white;
+            border: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 140px);
+        }
+
+        .queue-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            background: #f8f9fa;
+        }
+
+        .queue-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #212529;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .queue-count {
+            background: #495057;
+            color: white;
+            font-size: 0.75em;
+            padding: 3px 6px;
+            font-weight: 600;
+        }
+
+        .queue-controls {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+        }
+
+        .queue-controls input[type="checkbox"] {
+            margin-right: 6px;
+        }
+
+        .queue-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.8em;
+        }
+
+        .queue-body {
+            flex: 1;
+            padding: 0 0px 20px;
+        }
+
+        .document-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .document-card {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e1e5e9;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .document-card:hover {
+            border-color: #495057;
+            background: white;
+        }
+
+        .doc-checkbox {
+            margin-right: 10px;
+        }
+
+        .doc-type-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.9em;
+            color: white;
+            font-weight: 500;
+            background: #6c757d;
+            flex-shrink: 0;
+        }
+
+        .doc-type-icon.pdf { background: #dc3545; }
+        .doc-type-icon.ppt { background: #fd7e14; }
+        .doc-type-icon.doc { background: #0066cc; }
+        .doc-type-icon.video { background: #6f42c1; }
+
+        .doc-info {
+            flex: 1;
+            min-width: 0;
+            margin-right: 8px;
+        }
+
+        .doc-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+            color: #212529;
+            font-size: 0.8em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .doc-meta {
+            font-size: 0.7em;
+            color: #6c757d;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .doc-status {
+            margin-right: 8px;
+            font-size: 0.65em;
+            padding: 2px 6px;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .status-ready { background: #d4edda; color: #155724; }
+        .status-uploading { background: #fff3cd; color: #856404; }
+        .status-error { background: #f8d7da; color: #721c24; }
+
+        .doc-actions {
+            display: flex;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            width: 26px;
+            height: 26px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            font-size: 0.7em;
+        }
+
+        .action-btn:hover { background: #e9ecef; }
+        .action-btn.upload:hover { background: #d4edda; color: #155724; }
+        .action-btn.edit:hover { background: #d1ecf1; color: #0c5460; }
+        .action-btn.delete:hover { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="school-header">
+            <div class="school-logo">F</div>
+            <div class="school-name">THPT FPT</div>
+            <div class="school-subtitle">Quản lý tài liệu</div>
+        </div>
+
+        <div class="nav-main-item">
+            <span>Tài liệu của tôi</span>
+        </div>
+        
+        <div class="dropdown-menu">
+            <a href="#" class="dropdown-item active">Thêm tài liệu</a>
+            <a href="#" class="dropdown-item">Xem tài liệu của tôi</a>
+            <a href="#" class="dropdown-item">Chờ xét duyệt</a>
+            <a href="#" class="dropdown-item">Yêu thích</a>
+            <a href="#" class="dropdown-item">Lịch sử truy cập</a>
+        </div>
+    </div>
+
+    <div class="main-area">
+        <div class="breadcrumb-container">
+            <div class="breadcrumb">
+                <a href="#">Trang chủ</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="#">Tài liệu của tôi</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Thêm tài liệu</span>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Thông tin tài liệu</h2>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Tên tài liệu <span class="required">*</span></label>
+                            <input type="text" class="form-input" placeholder="Nhập tên tài liệu" value="Bài giảng Hàm số bậc 2 - Chương 3">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Môn học <span class="required">*</span></label>
+                                <div class="search-dropdown">
+                                    <input type="text" class="search-input" placeholder="Tìm kiếm và chọn môn học" value="Toán học" readonly>
+                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Khối lớp <span class="required">*</span></label>
+                                <div class="search-dropdown">
+                                    <input type="text" class="search-input" placeholder="Tìm kiếm và chọn khối lớp" value="Lớp 10" readonly>
+                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Loại tài liệu <span class="required">*</span></label>
+                                <div class="search-dropdown">
+                                    <input type="text" class="search-input" placeholder="Tìm kiếm và chọn loại tài liệu" value="Bài giảng" readonly>
+                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Quyền truy cập</label>
+                                <select class="form-input">
+                                    <option value="public">Công khai</option>
+                                    <option value="school" selected>Nội bộ trường</option>
+                                    <option value="private">Riêng tư</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mô tả tài liệu</label>
+                            <textarea class="form-input form-textarea" placeholder="Mô tả ngắn gọn về nội dung, cách sử dụng...">Bài giảng về hàm số bậc 2, bao gồm định nghĩa, tính chất, cách vẽ đồ thị và các dạng bài tập thường gặp. Phù hợp cho học sinh lớp 10.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tệp tài liệu <span class="required">*</span></label>
+                            <div class="upload-zone">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="upload-text">Kéo thả tệp vào đây hoặc nhấp để chọn</div>
+                                <div class="upload-subtext">PDF, DOC, DOCX, PPT, PPTX, MP4 - Tối đa 50MB</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-secondary">Hủy bỏ</button>
+                        <button class="btn btn-primary">Thêm vào danh sách</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="queue-container">
+                <div class="queue-header">
+                    <h3 class="queue-title">
+                        Danh sách tải lên
+                        <span class="queue-count">4</span>
+                    </h3>
+                </div>
+
+                <div class="queue-controls">
+                    <input type="checkbox" id="selectAll">
+                    <label for="selectAll">Chọn tất cả</label>
+                    
+                    <div class="queue-actions">
+                        <button class="btn btn-secondary btn-sm">Xóa</button>
+                        <button class="btn btn-primary btn-sm">Tải lên</button>
+                    </div>
+                </div>
+
+                <div class="queue-body">
+                    <div class="document-list">
+                        <div class="document-card">
+                            <div class="doc-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="doc-type-icon pdf">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="doc-info">
+                                <div class="doc-title">Bài giảng Hàm ...</div>
+                                <div class="doc-meta">Toán học • Lớp 10 • Bài giảng</div>
+                            </div>
+                            <div class="doc-status status-ready">Sẵn sàng</div>
+                            <div class="doc-actions">
+                                <button class="action-btn upload">
+                                    <i class="fas fa-upload"></i>
+                                </button>
+                                <button class="action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-checkbox">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="doc-type-icon ppt">
+                                <i class="fas fa-file-powerpoint"></i>
+                            </div>
+                            <div class="doc-info">
+                                <div class="doc-title">Slide bài tập ...</div>
+                                <div class="doc-meta">Toán học • Lớp 11 • Bài tập</div>
+                            </div>
+                            <div class="doc-status status-ready">Sẵn sàng</div>
+                            <div class="doc-actions">
+                                <button class="action-btn upload">
+                                    <i class="fas fa-upload"></i>
+                                </button>
+                                <button class="action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="doc-type-icon doc">
+                                <i class="fas fa-file-word"></i>
+                            </div>
+                            <div class="doc-info">
+                                <div class="doc-title">Đề thi giữa kì ...</div>
+                                <div class="doc-meta">Toán học • Lớp 12 • Đề thi</div>
+                            </div>
+                            <div class="doc-status status-uploading">Đang tải</div>
+                            <div class="doc-actions">
+                                <button class="action-btn upload" disabled>
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </button>
+                                <button class="action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="doc-type-icon video">
+                                <i class="fas fa-file-video"></i>
+                            </div>
+                            <div class="doc-info">
+                                <div class="doc-title">Video giải bài ...</div>
+                                <div class="doc-meta">Toán học • Lớp 12 • Video</div>
+                            </div>
+                            <div class="doc-status status-error">Lỗi tải</div>
+                            <div class="doc-actions">
+                                <button class="action-btn upload">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="action-btn edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
